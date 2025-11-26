@@ -1,0 +1,187 @@
+.mandalart-container {
+    width: 100%;
+    padding: 1rem;
+}
+
+.mandalart-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 12px;
+    aspect-ratio: 1;
+    max-width: 600px;
+    margin: 0 auto;
+    perspective: 1000px;
+}
+
+.cell {
+    position: relative;
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.cell::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, var(--accent-glow) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.cell:hover::before {
+    opacity: 1;
+}
+
+.cell:hover {
+    border-color: var(--accent-primary);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow:
+        0 8px 24px var(--accent-glow),
+        0 0 0 1px var(--accent-primary);
+}
+
+.cell:active {
+    transform: translateY(-2px) scale(1.01);
+}
+
+.center-cell {
+    background: var(--cell-center);
+    border-color: var(--accent-primary);
+    box-shadow: 0 4px 20px var(--accent-glow);
+    font-weight: 600;
+}
+
+.center-cell:hover {
+    cursor: text;
+    transform: scale(1.05);
+}
+
+.outer-cell:hover {
+    cursor: pointer;
+}
+
+.cell input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.cell input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.5;
+}
+
+.cell input.editing {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.center-cell input {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Animation when cells appear */
+.cell {
+    animation: cellAppear 0.4s ease-out backwards;
+}
+
+.cell:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+.cell:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.cell:nth-child(3) {
+    animation-delay: 0.15s;
+}
+
+.cell:nth-child(4) {
+    animation-delay: 0.2s;
+}
+
+.cell:nth-child(5) {
+    animation-delay: 0.25s;
+}
+
+.cell:nth-child(6) {
+    animation-delay: 0.3s;
+}
+
+.cell:nth-child(7) {
+    animation-delay: 0.35s;
+}
+
+.cell:nth-child(8) {
+    animation-delay: 0.4s;
+}
+
+.cell:nth-child(9) {
+    animation-delay: 0.45s;
+}
+
+@keyframes cellAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.8) rotateX(20deg);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) rotateX(0deg);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .mandalart-grid {
+        gap: 8px;
+    }
+
+    .cell {
+        padding: 0.75rem;
+        border-radius: 12px;
+    }
+
+    .cell input {
+        font-size: 0.9rem;
+    }
+
+    .center-cell input {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .cell {
+        padding: 0.5rem;
+    }
+
+    .cell input {
+        font-size: 0.8rem;
+    }
+
+    .center-cell input {
+        font-size: 0.95rem;
+    }
+}
