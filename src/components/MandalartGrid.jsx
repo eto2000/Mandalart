@@ -13,10 +13,6 @@ function MandalartGrid({ cells, onCellClick, onCellChange }) {
             e.preventDefault()
             // Blur the input to save the current value
             e.target.blur()
-            // If not center cell, navigate on Enter
-            if (index !== 4 && cells[index].trim() !== '') {
-                onCellClick(index)
-            }
         }
     }
 
@@ -39,7 +35,16 @@ function MandalartGrid({ cells, onCellClick, onCellChange }) {
                             className={editingCell === index ? 'editing' : ''}
                         />
                         {index !== 4 && text.trim() !== '' && (
-                            <div className="nav-hint">Enter로 이동</div>
+                            <button
+                                className="nav-btn"
+                                onClick={(e) => {
+                                    e.stopPropagation() // Prevent cell click from triggering if we add cell click later
+                                    onCellClick(index)
+                                }}
+                                title="이동"
+                            >
+                                🔍
+                            </button>
                         )}
                     </div>
                 ))}
