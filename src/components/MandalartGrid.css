@@ -51,35 +51,102 @@
     transform: translateY(-2px) scale(1.01);
 }
 
-.center-cell {
-    background: var(--cell-center);
-    border-color: var(--accent-primary);
-    box-shadow: 0 4px 20px var(--accent-glow);
-    font-weight: 600;
+.cell {
+    position: relative;
+    border: 1px solid #ddd;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    transition: all 0.2s;
 }
 
-.center-cell:hover {
-    cursor: text;
-    transform: scale(1.05);
+.cell.completed {
+    background-color: #f0fff4;
+}
+
+.center-cell {
+    background-color: #fff3cd;
+    border: 2px solid #ffc107;
+    font-weight: bold;
 }
 
 .outer-cell:hover {
-    cursor: pointer;
+    background-color: #f8f9fa;
 }
 
-.cell input {
+.text-input {
     width: 100%;
     height: 100%;
-    background: transparent;
     border: none;
-    outline: none;
-    color: var(--text-primary);
-    font-size: 1rem;
-    font-weight: 500;
     text-align: center;
-    transition: all 0.2s ease;
+    background: transparent;
+    font-size: 14px;
+    outline: none;
+    padding: 10px;
+}
+
+.text-input.editing {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.nav-btn {
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    padding: 4px;
+    z-index: 10;
+}
+
+.cell:hover .nav-btn {
+    opacity: 1;
+}
+
+.completion-checkbox {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    z-index: 10;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
+.completion-rate {
+    position: absolute;
+    font-size: 12px;
+    font-weight: bold;
+    color: #28a745;
+}
+
+.parent-rate {
+    top: 5px;
+    left: 5px;
+}
+
+.center-content {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 100%;
+    pointer-events: none;
+}
+
+.center-rate {
     position: relative;
-    z-index: 1;
+    /* Reset absolute from class */
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 12px;
 }
 
 .cell input::placeholder {
