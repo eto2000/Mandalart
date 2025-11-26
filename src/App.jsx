@@ -1,15 +1,40 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import MandalartGrid from './components/MandalartGrid'
 
+const STORAGE_KEY = 'mandalart-history'
+
 function App() {
   // Navigation stack: array of {nodeId, cells} objects
-  const [history, setHistory] = useState([
-    {
-      nodeId: 'root',
-      cells: Array(9).fill('') // 9 cells, all empty initially
+  const [history, setHistory] = useState(() => {
+    // Load from localStorage on initial mount
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY)
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        return parsed.length > 0 ? parsed : [{
+          nodeId: 'root',
+          cells: Array(9).fill('')
+        }]
+      }
+    } catch (error) {
+      console.error('Failed to load from localStorage:', error)
     }
-  ])
+    // Default initial state
+    return [{
+      nodeId: 'root',
+      cells: Array(9).fill('')
+    }]
+  })
+
+  // Save to localStorage whenever history changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(history))
+    } catch (error) {
+      console.error('Failed to save to localStorage:', error)
+    }
+  }, [history])
 
   const currentNode = history[history.length - 1]
 
@@ -51,15 +76,15 @@ function App() {
       <div className="header">
         <h1>Mandalart</h1>
         <div className="nav-buttons">
-          <button 
-            onClick={goHome} 
+          <button
+            onClick={goHome}
             disabled={history.length === 1}
             className="btn-nav"
           >
             🏠 Home
           </button>
-          <button 
-            onClick={goBack} 
+          <button
+            onClick={goBack}
             disabled={history.length === 1}
             className="btn-nav"
           >
@@ -67,13 +92,13 @@ function App() {
           </button>
         </div>
       </div>
-      
+
       <MandalartGrid
         cells={currentNode.cells}
         onCellClick={navigateToChild}
         onCellChange={updateCell}
       />
-      
+
       <div className="breadcrumb">
         레벨 {history.length}
       </div>
