@@ -4,25 +4,17 @@ import './MandalartGrid.css'
 function MandalartGrid({ cells, onCellClick, onCellChange }) {
     const [editingCell, setEditingCell] = useState(null)
 
-    const handleCellClick = (index) => {
-        if (index === 4) {
-            // Center cell: just focus for editing
-            setEditingCell(index)
-        } else {
-            // Non-center: navigate
-            onCellClick(index)
-        }
-    }
-
     const handleCellChange = (index, value) => {
         onCellChange(index, value)
     }
 
     const handleKeyDown = (e, index) => {
         if (e.key === 'Enter') {
-            setEditingCell(null)
+            e.preventDefault()
+            // Blur the input to save the current value
+            e.target.blur()
             // If not center cell, navigate on Enter
-            if (index !== 4) {
+            if (index !== 4 && cells[index].trim() !== '') {
                 onCellClick(index)
             }
         }
@@ -35,7 +27,6 @@ function MandalartGrid({ cells, onCellClick, onCellChange }) {
                     <div
                         key={index}
                         className={`cell ${index === 4 ? 'center-cell' : 'outer-cell'}`}
-                        onClick={() => handleCellClick(index)}
                     >
                         <input
                             type="text"
@@ -44,9 +35,12 @@ function MandalartGrid({ cells, onCellClick, onCellChange }) {
                             onFocus={() => setEditingCell(index)}
                             onBlur={() => setEditingCell(null)}
                             onKeyDown={(e) => handleKeyDown(e, index)}
-                            placeholder={index === 4 ? '주제' : ''}
+                            placeholder={index === 4 ? '주제' : '하위 항목'}
                             className={editingCell === index ? 'editing' : ''}
                         />
+                        {index !== 4 && text.trim() !== '' && (
+                            <div className="nav-hint">Enter로 이동</div>
+                        )}
                     </div>
                 ))}
             </div>

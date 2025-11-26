@@ -152,6 +152,25 @@
     }
 }
 
+.nav-hint {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    opacity: 0.6;
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.cell:hover .nav-hint {
+    opacity: 1;
+    color: var(--accent-primary);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .mandalart-grid {
