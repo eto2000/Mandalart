@@ -172,7 +172,7 @@ function App() {
             disabled={path.length === 1}
             className="btn-nav"
           >
-            🏠 Home
+            처음으로
           </button>
           <button
             onClick={goBack}
