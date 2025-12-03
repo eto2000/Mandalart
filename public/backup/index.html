@@ -93,18 +93,18 @@
 </body>
 
 <script>
-    const service_id = 'mandalart-test'
+    const service_id = 'mandalart'
     // API Endpoint Configuration
     const storageKey = 'mandalart-history'
 
-    const API_BASE_URL = 'http://localhost:8001';
+    const API_BASE_URL = 'http://remindly.cafe24app.com';
+    // const API_BASE_URL = 'http://localhost:8001';
     const API_ENDPOINTS = {
         join: `${API_BASE_URL}/backup/user/join`,
         login: `${API_BASE_URL}/backup/user/login`,
         update: `${API_BASE_URL}/backup/user/update`,
         fetch: `${API_BASE_URL}/backup/user/fetch`
     };
-    // const API_BASE_URL = 'http://remindly.cafe24app.com';
 
 
     const updateSession = (user_idx, session_key) => {
