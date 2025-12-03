@@ -140,6 +140,26 @@ function App() {
     setPath(['root'])
   }
 
+  // Backup data to JSON file
+  const handleBackup = () => {
+    try {
+      const dataStr = JSON.stringify(nodes, null, 2)
+      const dataBlob = new Blob([dataStr], { type: 'application/json' })
+      const url = URL.createObjectURL(dataBlob)
+      const link = document.createElement('a')
+      link.href = url
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)
+      link.download = `mandalart-backup-${timestamp}.json`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error('Failed to backup data:', error)
+      alert('백업 실패: ' + error.message)
+    }
+  }
+
   // Get display data for the grid
   const getGridCells = () => {
     return currentNode.cells.map((cell, index) => {
@@ -165,7 +185,15 @@ function App() {
   return (
     <div className="app">
       <div className="header">
-        <h1>Mandalart</h1>
+        <div className="header-top">
+          <h1>Mandalart</h1>
+          <button
+            onClick={handleBackup}
+            className="btn-backup"
+          >
+            Backup
+          </button>
+        </div>
         <div className="nav-buttons">
           <button
             onClick={goHome}
