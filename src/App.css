@@ -123,25 +123,16 @@
     padding: 1.5rem;
   }
 
-  .header-top {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
   .header h1 {
     font-size: 2rem;
   }
 
   .btn-backup {
-    position: static;
-    width: 100%;
-  }
-
-  .nav-buttons {
-    flex-direction: column;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
   }
 
   .btn-nav {
-    width: 100%;
+    flex: 1;
   }
 }
