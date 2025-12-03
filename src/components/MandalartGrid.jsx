@@ -28,30 +28,33 @@ function MandalartGrid({ cells, onCellClick, onCellChange }) {
                         className={`cell ${index === 4 ? 'center-cell' : 'outer-cell'} ${cell.completed ? 'completed' : ''}`}
                     >
                         {/* Completion Checkbox for Leaf Nodes */}
-                        {!cell.isCenter && !cell.isParent && cell.text.trim() !== '' && (
-                            <input
-                                type="checkbox"
-                                className="completion-checkbox"
-                                checked={cell.completed}
-                                onChange={(e) => handleCompletionChange(index, e.target.checked)}
-                            />
-                        )}
+                        {
+                            /*!cell.isCenter && !cell.isParent && cell.text.trim() !== '' && (
+                                <input
+                                    type="checkbox"
+                                    className="completion-checkbox"
+                                    checked={cell.completed}
+                                    onChange={(e) => handleCompletionChange(index, e.target.checked)}
+                                />
+                            )
+                            */
+                        }
 
                         {/* Completion Rate for Parent Nodes */}
-                        {!cell.isCenter && cell.isParent && (
+                        {/*!cell.isCenter && cell.isParent && (
                             <div className="completion-rate parent-rate">
                                 {cell.completionRate}%
                             </div>
-                        )}
+                        )*/}
 
                         {/* Center Cell Content */}
-                        {cell.isCenter && (
+                        {/*cell.isCenter && (
                             <div className="center-content">
                                 <div className="completion-rate center-rate">
                                     {cell.completionRate}%
                                 </div>
                             </div>
-                        )}
+                        )*/}
 
                         <input
                             type="text"
