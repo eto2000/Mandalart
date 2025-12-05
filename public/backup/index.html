@@ -65,48 +65,20 @@
     <input type="hidden" id="global_session_key">
     <input type="hidden" id="global_service_id">
 
-    <!-- Hidden Forms for POST submissions -->
-    <form id="join_form" action="" method="POST" style="display: none;">
-        <input type="hidden" name="service_id" id="join_form_service_id">
-        <input type="hidden" name="email" id="join_form_email">
-        <input type="hidden" name="pw" id="join_form_pw">
-    </form>
-
-    <form id="login_form" action="" method="POST" style="display: none;">
-        <input type="hidden" name="service_id" id="login_form_service_id">
-        <input type="hidden" name="email" id="login_form_email">
-        <input type="hidden" name="pw" id="login_form_pw">
-    </form>
-
-    <form id="update_form" action="" method="POST" style="display: none;">
-        <input type="hidden" name="user_idx" id="update_form_user_idx">
-        <input type="hidden" name="session_key" id="update_form_session_key">
-        <input type="hidden" name="body" id="update_form_body">
-        <input type="hidden" name="service_id" id="update_form_service_id">
-    </form>
-
-    <form id="fetch_form" action="" method="POST" style="display: none;">
-        <input type="hidden" name="user_idx" id="fetch_form_user_idx">
-        <input type="hidden" name="session_key" id="fetch_form_session_key">
-        <input type="hidden" name="service_id" id="fetch_form_service_id">
-    </form>
 </body>
 
 <script>
     const service_id = 'mandalart'
-    // API Endpoint Configuration
     const storageKey = 'mandalart-history'
-
-    // const API_BASE_URL = 'http://remindly.cafe24app.com';
-    const API_BASE_URL = 'https://flat-mountain-0509.soocoolkim.workers.dev'
     // const API_BASE_URL = 'http://localhost:8001';
+    const API_BASE_URL = 'https://flat-mountain-0509.soocoolkim.workers.dev'
+    // API Endpoint Configuration
     const API_ENDPOINTS = {
         join: `${API_BASE_URL}/backup/user/join`,
         login: `${API_BASE_URL}/backup/user/login`,
         update: `${API_BASE_URL}/backup/user/update`,
         fetch: `${API_BASE_URL}/backup/user/fetch`
     };
-
 
     const updateSession = (user_idx, session_key) => {
         document.getElementById('global_user_idx').value = user_idx;
@@ -122,65 +94,6 @@
         }
     }
 
-    // URL 파라미터 가져오기 (페이지 로딩 직후 실행)
-    const urlParams = {};
-    (function parseUrlParams() {
-        const searchParams = new URLSearchParams(window.location.search);
-        for (const [key, value] of searchParams.entries()) {
-            urlParams[key] = value;
-        }
-        console.log('URL Parameters:', urlParams);
-        history.replaceState({}, "", location.pathname);
-    })();
-
-    const { type, error } = urlParams
-    const { user_idx, session_key } = urlParams;
-
-    switch (type) {
-        case 'join':
-            if (error == '1') {
-                alert('가입실패')
-            }
-            else {
-                alert('가입완료')
-            }
-            break;
-        case 'login':
-            if (error == '1') {
-                alert('로그인실패')
-            }
-            else {
-                alert('로그인완료')
-                updateSession(user_idx, session_key)
-            }
-            break;
-        case 'update':
-            updateSession(user_idx, session_key)
-            if (error == '1') {
-                alert('업데이트실패')
-            }
-            else {
-                alert('업데이트완료')
-            }
-            break;
-        case 'fetch':
-            updateSession(user_idx, session_key)
-            if (error == '1') {
-                alert('가져오기 실패')
-            }
-            else {
-                console.log('body>', urlParams.body)
-
-                // confirm을 받고 진행한다.
-                if (confirm(`${urlParams.updated}에 작성된 내용으로 업데이트 할까요?`)) {
-                    localStorage.setItem(storageKey, urlParams.body)
-                }
-            }
-            break;
-        default:
-            break;
-    }
-
     function switchTab(tabName) {
         const tabContents = document.querySelectorAll('.tab-content');
         tabContents.forEach(content => content.classList.remove('active'));
@@ -192,51 +105,94 @@
         }
     }
 
-    function apiJoin() {
+    async function apiJoin() {
         const email = document.getElementById('auth_email').value;
         const pw = document.getElementById('join_pw').value;
 
-        const form = document.getElementById('join_form');
-        form.action = API_ENDPOINTS.join;
-        document.getElementById('join_form_email').value = email;
-        document.getElementById('join_form_pw').value = pw;
-        document.getElementById('join_form_service_id').value = service_id;
-        form.submit();
+        if (!email || !pw) {
+            alert('Please enter email and password');
+            return;
+        }
+
+        try {
+            const response = await fetch(API_ENDPOINTS.join, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ service_id, email, pw })
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                alert('Join successful');
+                switchTab('login');
+            } else {
+                alert('Join failed: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred during join');
+        }
     }
 
-    function apiLogin() {
+    async function apiLogin() {
         const email = document.getElementById('auth_email').value;
         const pw = document.getElementById('login_pw').value;
 
-        const form = document.getElementById('login_form');
-        form.action = API_ENDPOINTS.login;
-        document.getElementById('login_form_email').value = email;
-        document.getElementById('login_form_pw').value = pw;
-        document.getElementById('login_form_service_id').value = service_id;
-        form.submit();
+        if (!email || !pw) {
+            alert('Please enter email and password');
+            return;
+        }
+
+        try {
+            const response = await fetch(API_ENDPOINTS.login, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ service_id, email, pw })
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                alert('Login successful');
+                updateSession(result.user_idx, result.session_key);
+            } else {
+                alert('Login failed: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred during login');
+        }
     }
 
-    function apiUpdate() {
+    async function apiUpdate() {
         const user_idx = document.getElementById('global_user_idx').value;
         const session_key = document.getElementById('global_session_key').value;
-        // const body = document.getElementById('update_body').value;
-        const body = localStorage.getItem(storageKey)
+        const body = localStorage.getItem(storageKey);
 
         if (!user_idx || !session_key) {
             alert('Please login first!');
             return;
         }
 
-        const form = document.getElementById('update_form');
-        form.action = API_ENDPOINTS.update;
-        document.getElementById('update_form_user_idx').value = user_idx;
-        document.getElementById('update_form_session_key').value = session_key;
-        document.getElementById('update_form_body').value = body;
-        document.getElementById('update_form_service_id').value = service_id;
-        form.submit();
+        try {
+            const response = await fetch(API_ENDPOINTS.update, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ service_id, user_idx, session_key, body })
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                alert('Update successful');
+            } else {
+                alert('Update failed: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred during update');
+        }
     }
 
-    function onDownload() {
+    async function onDownload() {
         const user_idx = document.getElementById('global_user_idx').value;
         const session_key = document.getElementById('global_session_key').value;
 
@@ -245,12 +201,27 @@
             return;
         }
 
-        const form = document.getElementById('fetch_form');
-        form.action = API_ENDPOINTS.fetch;
-        document.getElementById('fetch_form_user_idx').value = user_idx;
-        document.getElementById('fetch_form_session_key').value = session_key;
-        document.getElementById('fetch_form_service_id').value = service_id;
-        form.submit();
+        try {
+            const response = await fetch(API_ENDPOINTS.fetch, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ service_id, user_idx, session_key })
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                console.log('body>', result.body);
+                if (confirm(`${result.updated}에 작성된 내용으로 업데이트 할까요?`)) {
+                    localStorage.setItem(storageKey, result.body);
+                    alert('Data loaded to local storage');
+                }
+            } else {
+                alert('Fetch failed: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred during fetch');
+        }
     }
 </script>
 
